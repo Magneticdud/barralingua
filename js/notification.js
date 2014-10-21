@@ -30,6 +30,8 @@
                             wrapper.removeClass('visible').addClass('hide');
                         });
                     }
+					alert("chiuso");
+					scriviCookie("nonscassare","true",2);
                 });
                 if (settings.type == 'floated') {
                     $(document).scroll(function (e) {

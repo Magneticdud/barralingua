@@ -1,0 +1,105 @@
+<html>
+<head>
+    <title>Tasks</title>
+	<link href="style/default.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script type="text/javascript" src="js/notification.js"></script>
+    <script type="text/javascript">
+      
+		function trovalingua() {
+                                var lang
+                                //alert("ciao");
+                                // PhoneGap on Android would always return EN in navigator.*language. 
+                                // Parse userAgent instead 
+                                // Mozilla/5.0 (Linux; U; Android 2.2; de-ch; HTC Desire Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1 
+                                if ( navigator && navigator.userAgent 
+                                        && (lang = navigator.userAgent.match(/android.*\W(\w\w)-(\w\w)\W/i)) 
+                                ) { 
+                                        lang = lang[1]; 
+                                } 
+                                
+                                if (!lang && navigator) { 
+                                        if (navigator.language) { 
+                                                lang = navigator.language; 
+                                        } else if (navigator.browserLanguage) { 
+                                                lang = navigator.browserLanguage; 
+                                        } else if (navigator.systemLanguage) { 
+                                                lang = navigator.systemLanguage; 
+                                        } else if (navigator.userLanguage) { 
+                                                lang = navigator.userLanguage; 
+                                        } 
+                                        lang = lang.substr(0, 2); 
+                                }  
+                                //alert(lang);
+                                return lang;
+                        } 
+						
+		function scriviCookie(nomeCookie,valoreCookie,durataCookie)
+		{
+		  var scadenza = new Date();
+		  var adesso = new Date();
+		  scadenza.setTime(adesso.getTime() + (parseInt(durataCookie) * 60000));
+		  document.cookie = nomeCookie + '=' + escape(valoreCookie) + '; expires=' + scadenza.toGMTString() + '; path=/';
+		}
+		
+		function leggiCookie(nomeCookie)
+		{
+		  if (document.cookie.length > 0)
+		  {
+			var inizio = document.cookie.indexOf(nomeCookie + "=");
+			if (inizio != -1)
+			{
+			  inizio = inizio + nomeCookie.length + 1;
+			  var fine = document.cookie.indexOf(";",inizio);
+			  if (fine == -1) fine = document.cookie.length;
+			  return unescape(document.cookie.substring(inizio,fine));
+			}else{
+			   return "";
+			}
+		  }
+		  return "";
+		}
+						
+		function localize (lingua) {
+				var barra = document.getElementById("cicciobarra");
+				switch(lingua)
+				{
+				case "it":
+				  barra.innerHTML = "Vuoi vedere il sito in italiano? <a href=\"http://www.w3schools.com\">Clicca qui!</a>";
+				  break;
+				case "en":
+				  barra.innerHTML = "Do you want to see the english site? Click here!"; 
+				  break;
+				default:
+				  barra.innerHTML = "What color it is?"; 
+				}				
+		}
+
+		$(document).ready(function () {
+		// retrieve database name from url (for example "tasks")
+        var folder = window.location.href.split("/")[7];
+		var lingua = trovalingua();
+		var nonscassare = leggiCookie("nonscassare");
+		if (folder!=lingua&&nonscassare!="true")
+		{
+			localize(lingua);
+			$('.notification.fixed').notify();
+		}
+
+        });						
+    </script>
+</head>
+
+<body>
+<div class="notification fixed hide">
+        <p id="cicciobarra">
+            </p>
+        <a class="close" href="javascript:">
+            <img src="images/icon-close.png" /></a>
+    </div>
+	
+    <h1>Tasks</h1>    
+    <input type="button" id="add" value="Add" onclick="addTask();" />
+    <div id="tasks"></div>
+</body>
+</html>
